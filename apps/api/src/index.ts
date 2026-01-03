@@ -33,6 +33,19 @@ app.use(
 );
 app.use(express.json({ limit: "200kb" }));
 
+app.get("/", (_req, res) =>
+  res.json({
+    name: "opsdesk-api",
+    ok: true,
+    endpoints: {
+      health: "/health",
+      auth: { register: "/auth/register", login: "/auth/login" },
+      me: "/me",
+      admin: { users: "/admin/users", setRole: "/admin/users/:id/role" },
+      audit: "/audit"
+    }
+  })
+);
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 const authLimiter = rateLimit({ windowMs: 60_000, limit: 20, standardHeaders: true, legacyHeaders: false });
@@ -47,4 +60,3 @@ app.listen(env.port, () => {
   // eslint-disable-next-line no-console
   console.log(`opsdesk-api listening on :${env.port}`);
 });
-
